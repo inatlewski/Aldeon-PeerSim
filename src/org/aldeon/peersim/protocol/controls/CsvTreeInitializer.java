@@ -15,16 +15,14 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-public class RedditCommentTreeInitializer implements Control {
+public class CsvTreeInitializer extends BaseTreeInitializer implements Control {
     private static final String PAR_SOURCE_PATH = "source";
     private static final String PAR_MAX_TIMESTAMP = "maxTimestamp";
-    private static final String PAR_PROT = "protocol";
 
     private String sourcePath;
     private Double maxTimestamp;
-    private int pid;
 
-    public RedditCommentTreeInitializer(String prefix) {
+    public CsvTreeInitializer(String prefix) {
         this.sourcePath = Configuration.getString(prefix + "." + PAR_SOURCE_PATH);
         this.maxTimestamp = Double.parseDouble(Configuration.getString(prefix + "." + PAR_MAX_TIMESTAMP));
         this.pid = Configuration.getPid(prefix + "." + PAR_PROT);
