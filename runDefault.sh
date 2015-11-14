@@ -1,1 +1,1 @@
-java -cp out/artifacts/AldeonPeerSim_jar/AldeonPeerSim.jar peersim.Simulator config/default.config
+java -cp out/artifacts/Aldeon_PeerSim_jar/Aldeon-PeerSim.jar peersim.Simulator config/default.config
