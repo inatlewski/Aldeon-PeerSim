@@ -18,7 +18,6 @@ public class BranchNotFoundResponse extends AldeonMessage {
     @Override
     public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
         return null;
     }
 }

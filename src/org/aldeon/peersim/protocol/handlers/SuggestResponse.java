@@ -25,7 +25,6 @@ public class SuggestResponse extends AldeonMessage {
     @Override
     public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
 
         ArrayList<AldeonMessage> result = new ArrayList<>();
 
@@ -37,14 +36,11 @@ public class SuggestResponse extends AldeonMessage {
         if (dbStub.getMessageById(Ig) == null && dbStub.checkAncestry(parentId, Ib)) {
             //we don't have Ig
             result.add(new GetBranchMessage(Ig));
-            aldeonProtocol.increaseMessagesSent();
 
             //we have Ib
             result.add(new CompareBranchMessage(Ib, dbStub.getMessageXorById(Ib), false));
-            aldeonProtocol.increaseMessagesSent();
         } else {
             result.add(new CompareBranchMessage(Ib, dbStub.getMessageXorById(Ib), true));
-            aldeonProtocol.increaseMessagesSent();
         }
 
         return result;

@@ -125,13 +125,13 @@ public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
         //read all messages from inbox
         for (Iterator<AldeonMessage> iterator = messageQueue.iterator(); iterator.hasNext();) {
             AldeonMessage message = iterator.next();
-            //System.out.println("receiving message " + message);
+            System.out.println("receiving message " + message + " on node " + node.getIndex());
             this.increaseMessagesReceived();
             ArrayList<AldeonMessage> responses = message.handle(dbStub, this);
             if (responses != null) {
                 for (AldeonMessage response : responses) {
                     peerAldeonProtocol.putMessage(response);
-                    //System.out.println("sending message " + response);
+                    System.out.println("sending message " + response);
                     this.increaseMessagesSent();
                 }
             }

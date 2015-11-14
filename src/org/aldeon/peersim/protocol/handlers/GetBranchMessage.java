@@ -25,7 +25,6 @@ public class GetBranchMessage extends AldeonMessage {
     @Override
     public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
 
         ArrayList<AldeonMessage> result = new ArrayList<>();
         ArrayList<Post> branchPosts = new ArrayList<>();
@@ -34,10 +33,8 @@ public class GetBranchMessage extends AldeonMessage {
             branchPosts.add(dbStub.getMessageById(id));
             recGetChildren(id, branchPosts, dbStub);
             result.add(new BranchFoundResponse(branchPosts));
-            aldeonProtocol.increaseMessagesSent();
         } else {
             result.add(new BranchNotFoundResponse());
-            aldeonProtocol.increaseMessagesSent();
         }
 
         return result;

@@ -25,7 +25,6 @@ public class BranchFoundResponse extends AldeonMessage {
     @Override
     public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
 
         //TODO insert messages into database
         for (Post post : posts) {

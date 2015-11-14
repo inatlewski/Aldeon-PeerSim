@@ -41,11 +41,9 @@ public class CompareBranchMessage extends AldeonMessage {
         ArrayList<AldeonMessage> results = new ArrayList<>();
         Post post = dbStub.getMessageById(Ib);
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
 
         if (post == null && !this.Ib.equals(Id.getEmpty())) {
             results.add(new BranchNotFoundResponse());
-            aldeonProtocol.increaseMessagesSent();
             return results;
         }
 
@@ -58,7 +56,6 @@ public class CompareBranchMessage extends AldeonMessage {
             if (!matchingBranch.isEmpty()) {
                 for (Id id : matchingBranch) {
                     results.add(new SuggestResponse(id, dbStub.getMessageById(id).getParent(), Ib));
-                    aldeonProtocol.increaseMessagesSent();
                     return results;
                 }
             }
@@ -66,11 +63,9 @@ public class CompareBranchMessage extends AldeonMessage {
 
         if (diff.equals(Id.getEmpty())) {
             results.add(new BranchInSyncResponse());
-            aldeonProtocol.increaseMessagesSent();
             return results;
         } else { //return children
             results.add(new ChildrenResponse(dbStub.getIdsAndXorsByParentId(Ib)));
-            aldeonProtocol.increaseMessagesSent();
             return results;
 
         }

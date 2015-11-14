@@ -33,6 +33,9 @@ public class AldeonObserver implements Control {
             AldeonProtocol protocol = (AldeonProtocol) Network.get(i).getProtocol(pid);
             messagesSent += protocol.getMessagesSent();
             messagesReceived += protocol.getMessagesReceived();
+
+            System.out.println("node " + i + " messages sent: " + protocol.getMessagesSent() + ", Messages received: "
+                    + protocol.getMessagesReceived());
         }
 
         /* Printing statistics */

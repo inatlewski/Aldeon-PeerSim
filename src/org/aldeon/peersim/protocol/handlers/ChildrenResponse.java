@@ -22,14 +22,12 @@ public class ChildrenResponse extends AldeonMessage {
     public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
         ArrayList<AldeonMessage> result = new ArrayList<>();
         AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        aldeonProtocol.increaseMessagesReceived();
 
         //iterate over all children
         for (Map.Entry<Id, Id> child : children.entrySet()) {
 
             if (dbStub.getMessageById(child.getKey()) == null) {
                 result.add(new GetBranchMessage(child.getKey()));
-                aldeonProtocol.increaseMessagesSent();
                 continue;
             }
 
@@ -39,7 +37,6 @@ public class ChildrenResponse extends AldeonMessage {
             if (localHash != null && localHash.xor(child.getValue()) != Id.getEmpty()) {
                 //if it's equal then it's already synchronized
                 result.add(new CompareBranchMessage(child.getKey(), dbStub.getMessageXorById(child.getKey()), false));
-                aldeonProtocol.increaseMessagesSent();
             }
         }
         return result;
