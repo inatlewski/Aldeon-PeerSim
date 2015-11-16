@@ -7,7 +7,8 @@ public class BaseTreeInitializer {
     protected String PAR_PERCENT_OF_MISSING_MESSAGES = "percentOfMissingMessages";
 
     protected int totalNumMessages;
+    protected int percentOfMissingMessages;
     protected int pid;
     protected long seed;
-    protected int percentOfMissingMessages;
+
 }

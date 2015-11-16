@@ -29,7 +29,13 @@ public class MessageTreeInitializer extends BaseTreeInitializer implements Contr
     public boolean execute() {
         CsvTreeReader csvTreeReader = new CsvTreeReader(sourcePath);
 
-        ArrayList<Post> loadedPosts = csvTreeReader.GetPostsTree();
+        ArrayList<Post> loadedPosts = null;
+
+        try {
+            loadedPosts = csvTreeReader.GetPostsTree();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         int insertedPostCount;
 
