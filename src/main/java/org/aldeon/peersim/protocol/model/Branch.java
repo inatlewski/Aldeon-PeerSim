@@ -8,9 +8,10 @@ import java.util.List;
  */
 public interface Branch {
 
-    public static final long NONE = 0L;
+    long ZERO = 0L;
 
     long identifier();
+    long parent();
     List<Branch> children();
 
     default long hash() {

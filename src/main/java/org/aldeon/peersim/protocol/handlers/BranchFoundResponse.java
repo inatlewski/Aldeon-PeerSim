@@ -1,35 +1,27 @@
 package org.aldeon.peersim.protocol.handlers;
 
-import org.aldeon.peersim.protocol.AldeonProtocol;
-import org.aldeon.peersim.protocol.models.DbStub;
-import org.aldeon.peersim.protocol.models.Post;
-import peersim.core.Protocol;
+import org.aldeon.peersim.protocol.model.Branch;
+import org.aldeon.peersim.protocol.model.Tree;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
-/**
- * Created by mb on 22.06.15.
- */
-public class BranchFoundResponse extends AldeonMessage {
-    public ArrayList<Post> posts;
 
-    public BranchFoundResponse(ArrayList<Post> posts) {
-        this.posts = posts;
+public class BranchFoundResponse extends Response {
+
+    private final Branch branch;
+
+    public BranchFoundResponse(Branch branch) {
+        this.branch = branch;
     }
 
     @Override
     public String toString() {
-        return "BranchFoundResponse " + posts;
+        return "BranchFoundResponse " + branch;
     }
 
     @Override
-    public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
-        AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-
-        //TODO insert messages into database
-        for (Post post : posts) {
-            dbStub.insertMessage(post);
-        }
-        return null;
+    protected void handle(Tree tree, Consumer<Request> sink) {
+        tree.add(branch.parent(), branch);
     }
+
 }

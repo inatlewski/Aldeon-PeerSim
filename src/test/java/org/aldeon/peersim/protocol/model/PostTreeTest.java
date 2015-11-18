@@ -46,4 +46,12 @@ public class PostTreeTest {
         assertEquals(t.hash(), 2);
 
     }
+
+    @Test
+    public void testFindById() {
+        Tree t = new Tree(7);
+        assertEquals(0, t.findByHash(5).size());
+        t.add(7, 2);
+        assertEquals(1, t.findByHash(5).size());
+    }
 }
