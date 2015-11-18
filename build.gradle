@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+}
+
+task(simulate, dependsOn: 'classes', type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'peersim.Simulator'
+    args = ["config/singleBranch.config"]
+}
