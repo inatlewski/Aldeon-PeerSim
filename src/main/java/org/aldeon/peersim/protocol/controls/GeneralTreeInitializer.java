@@ -16,17 +16,32 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-public class MessageTreeInitializer extends BaseTreeInitializer implements Control {
+public class GeneralTreeInitializer extends BaseTreeInitializer implements Control {
 
     private static final String PAR_SOURCE_PATH = "source";
-    private String sourcePath;
+    private static final String PAR_NUM_NEW = "numNewMessages"; //number of messages that should be added to the tree
+    private static final String PAR_DIFFGEN = "diffGeneration";
 
-    public MessageTreeInitializer(String prefix) {
+    private static final String DIFFGEN_RANDOM_LEAF = "randomLeaf"; //new leaf in a random place
+    private static final String DIFFGEN_LEAF_LEAF = "leafLeaf"; //new leaf as child of existing leaf
+    private static final String DIFFGEN_RANDOM_SUBTREE = "randomSubtree";
+    private static final String DIFFGEN_PROB = "probabilistic"; //probability of adding a leaf is proportional to the number of children
+
+    private String diffGeneration;
+    private String sourcePath;
+    private Integer numNewMessages;
+
+    public GeneralTreeInitializer(String prefix) {
+        this.diffGeneration = Configuration.getString(prefix + "." + PAR_DIFFGEN);
+        this.numNewMessages = Integer.parseInt(Configuration.getString(prefix + "." + PAR_NUM_NEW));
         this.sourcePath = Configuration.getString(prefix + "." + PAR_SOURCE_PATH);
         this.pid = Configuration.getPid(prefix + "." + PAR_PROT);
+
+        System.out.println("num new messages " + numNewMessages);
     }
 
     public boolean execute() {
+        //load tree from csv
         CsvTreeReader csvTreeReader = new CsvTreeReader(sourcePath);
 
         ArrayList<Post> loadedPosts = null;
@@ -54,6 +69,26 @@ public class MessageTreeInitializer extends BaseTreeInitializer implements Contr
         }
 
         AldeonProtocol fullNodeProtocol = (AldeonProtocol) Network.get(1).getProtocol(this.pid);
+
+        //TODO generate differences
+        switch (this.diffGeneration) {
+            case DIFFGEN_RANDOM_LEAF:
+                System.out.println("using random leaf generator"); //param: number of messages to add
+
+                break;
+            case DIFFGEN_LEAF_LEAF:
+                System.out.println("using leaf leaf generator");
+
+                break;
+            case DIFFGEN_RANDOM_SUBTREE:
+                System.out.println("using random subtree generator");
+
+                break;
+            case DIFFGEN_PROB:
+                System.out.println("using probabilistic generator");
+
+                break;
+        }
 
         return false;
     }
