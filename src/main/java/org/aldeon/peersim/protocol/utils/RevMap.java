@@ -3,10 +3,7 @@ package org.aldeon.peersim.protocol.utils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RevMap<K, V> {
 
@@ -43,5 +40,14 @@ public class RevMap<K, V> {
 
     public void putAll(RevMap<K, V> map) {
         map.values.entrySet().forEach(e -> put(e.getKey(), e.getValue()));
+    }
+
+    public void clear() {
+        index.clear();
+        values.clear();
+    }
+
+    public boolean containsAll(Collection<? extends K> keys) {
+        return keys.stream().allMatch(this::containsKey);
     }
 }

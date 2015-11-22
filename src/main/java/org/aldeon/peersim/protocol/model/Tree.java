@@ -6,9 +6,7 @@ import com.google.common.collect.Multimap;
 import org.aldeon.peersim.protocol.utils.RevMap;
 import org.javatuples.Pair;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Tree implements Branch {
@@ -47,9 +45,13 @@ public class Tree implements Branch {
     }
 
     public void add(long parent, Branch child) {
-        // TODO: rewrite to use queue instead of jvm stack
-        add(parent, child.identifier());
-        child.children().forEach(grandchild -> add(child.identifier(), grandchild));
+        Deque<Branch> todo = new LinkedList<>();
+        todo.add(child);
+        while (!todo.isEmpty()) {
+            Branch current = todo.pollFirst();
+            add(parent, child.identifier());
+            todo.addAll(current.children());
+        }
     }
 
     public boolean contains(long id) {
@@ -96,6 +98,11 @@ public class Tree implements Branch {
         return t;
     }
 
+    /**
+     * Fast tree constructor
+     * @param data
+     * @return
+     */
     public static Tree build(List<Pair<Long, Long>> data) {
 
         // 1. Build the tree
@@ -115,19 +122,30 @@ public class Tree implements Branch {
         }
 
         // 2. Calculate hashes in a single pass
-        if (tree != null) tree.recompute(tree.identifier());
+        if (tree != null) tree.recompute();
 
         return tree;
     }
 
-    private void recompute(long id) {
-        // TODO: rewrite with a stack
-        long sum = id;
-        for (long child: children.get(id)) {
-            recompute(child);
-            sum = sum ^ hash(child);
+    private void recompute() {
+        Deque<Long> nodes = new LinkedList<>();
+        Queue<Long> filler = new LinkedList<>();
+        hashes.clear();
+
+        filler.add(identifier());
+
+        while(!filler.isEmpty()) {
+            Long current = filler.poll();
+            nodes.addLast(current);
+            filler.addAll(children.get(current));
         }
-        hashes.put(id, sum);
+
+        while (!nodes.isEmpty()) {
+            Long current = nodes.pollLast();
+            long sum = current;
+            for (long child: children.get(current)) sum = sum ^ hashes.get(child);
+            hashes.put(current, sum);
+        }
     }
 
     private class View implements Branch {

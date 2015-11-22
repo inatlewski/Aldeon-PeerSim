@@ -1,8 +1,6 @@
 package org.aldeon.peersim.treeGenerators;
 
 import com.opencsv.CSVWriter;
-import org.aldeon.peersim.protocol.models.Id;
-import org.aldeon.peersim.protocol.models.Post;
 
 import java.io.FileWriter;
 import java.io.IOException;
