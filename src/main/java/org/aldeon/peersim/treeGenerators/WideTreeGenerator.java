@@ -1,4 +1,4 @@
-package main.java.org.aldeon.peersim.treeGenerators;
+package org.aldeon.peersim.treeGenerators;
 
 import com.opencsv.CSVWriter;
 
