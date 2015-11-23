@@ -1,15 +1,8 @@
 package org.aldeon.peersim.protocol;
 
 import peersim.config.Configuration;
-import peersim.core.CommonState;
 import peersim.core.Control;
 import peersim.core.Network;
-import peersim.util.IncrementalStats;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class AldeonObserver implements Control {
     /**
@@ -33,13 +26,9 @@ public class AldeonObserver implements Control {
             AldeonProtocol protocol = (AldeonProtocol) Network.get(i).getProtocol(pid);
             messagesSent += protocol.getMessagesSent();
             messagesReceived += protocol.getMessagesReceived();
-
-            System.out.println("node " + i + " messages sent: " + protocol.getMessagesSent() + ", Messages received: "
-                    + protocol.getMessagesReceived());
         }
 
         /* Printing statistics */
-        System.out.println("Messages sent: " + messagesSent + ", Messages received: " + messagesReceived);
         return false;
     }
 }

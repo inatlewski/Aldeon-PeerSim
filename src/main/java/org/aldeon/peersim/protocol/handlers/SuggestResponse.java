@@ -1,53 +1,34 @@
 package org.aldeon.peersim.protocol.handlers;
 
-import org.aldeon.peersim.protocol.AldeonProtocol;
-import org.aldeon.peersim.protocol.models.DbStub;
-import org.aldeon.peersim.protocol.models.Id;
-import peersim.core.Protocol;
+import org.aldeon.peersim.protocol.model.Tree;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
-/**
- * Created by mb on 22.06.15.
- */
-public class SuggestResponse extends AldeonMessage {
-    private Id parentId;
-    private Id Ig;
-    //TODO we need Ib - send in message <- differs from article
-    private Id Ib;
 
-    public SuggestResponse(Id Ig, Id parentId, Id Ib) {
-        this.parentId = parentId;
-        this.Ig = Ig;
-        this.Ib = Ib;
-    }
+public class SuggestResponse extends Response {
 
-    @Override
-    public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
-        AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
+    private final long id;
+    private final long parent;
+    private final long originalBranch;
 
-        ArrayList<AldeonMessage> result = new ArrayList<>();
-
-        //TODO check for bugs
-
-        System.out.println("get suggest " + dbStub.getMessageById(Ig));
-        System.out.println("check ancestry " + dbStub.checkAncestry(parentId, Ib));
-
-        if (dbStub.getMessageById(Ig) == null && dbStub.checkAncestry(parentId, Ib)) {
-            //we don't have Ig
-            result.add(new GetBranchMessage(Ig));
-
-            //we have Ib
-            result.add(new CompareBranchMessage(Ib, dbStub.getMessageXorById(Ib), false));
-        } else {
-            result.add(new CompareBranchMessage(Ib, dbStub.getMessageXorById(Ib), true));
-        }
-
-        return result;
+    public SuggestResponse(long id, long parent, long originalBranch) {
+        this.id = id;
+        this.parent = parent;
+        this.originalBranch = originalBranch;
     }
 
     @Override
     public String toString() {
-        return "SuggestResponse parentId=" + parentId + " Ig=" + Ig + " Ib=" + Ib;
+        return "SuggestResponse parent=" + parent + " id=" + id;
+    }
+
+    @Override
+    protected void handle(Tree tree, Consumer<Request> sink) {
+        if (tree.contains(parent) && ! tree.contains(id)) {
+            sink.accept(new GetBranchRequest(id));
+            // then we should ask the original branch again, but we can skip it for now.
+        } else {
+            sink.accept(new CompareBranchRequest(originalBranch, tree.findById(originalBranch).hash(), false));
+        }
     }
 }

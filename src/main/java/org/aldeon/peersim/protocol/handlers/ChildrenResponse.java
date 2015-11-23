@@ -1,49 +1,47 @@
 package org.aldeon.peersim.protocol.handlers;
 
-import org.aldeon.peersim.protocol.AldeonProtocol;
-import org.aldeon.peersim.protocol.models.DbStub;
-import org.aldeon.peersim.protocol.models.Id;
-import peersim.core.Protocol;
+import org.aldeon.peersim.protocol.model.Branch;
+import org.aldeon.peersim.protocol.model.Tree;
+import org.javatuples.Pair;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-import java.util.ArrayList;
-import java.util.Map;
 
-/**
- * Created by mb on 22.06.15.
- */
-public class ChildrenResponse extends AldeonMessage {
-    public Map<Id, Id> children;
+public class ChildrenResponse extends Response {
 
-    public ChildrenResponse(Map<Id, Id> children) {
+    public final List<Pair<Long, Long>> children;
+
+    public ChildrenResponse(List<Pair<Long, Long>> children) {
         this.children = children;
-    }
-
-    @Override
-    public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
-        ArrayList<AldeonMessage> result = new ArrayList<>();
-        AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-
-        //iterate over all children
-        for (Map.Entry<Id, Id> child : children.entrySet()) {
-
-            if (dbStub.getMessageById(child.getKey()) == null) {
-                result.add(new GetBranchMessage(child.getKey()));
-                continue;
-            }
-
-            //get local hash for child id
-            Id localHash = dbStub.getMessageXorById(child.getKey());
-
-            if (localHash != null && localHash.xor(child.getValue()) != Id.getEmpty()) {
-                //if it's equal then it's already synchronized
-                result.add(new CompareBranchMessage(child.getKey(), dbStub.getMessageXorById(child.getKey()), false));
-            }
-        }
-        return result;
     }
 
     @Override
     public String toString() {
         return "ChildrenResponse " + children;
+    }
+
+    @Override
+    protected void handle(Tree tree, Consumer<Request> sink) {
+
+        //iterate over all children
+        for (Pair<Long, Long> entry: children) {
+
+            long id = entry.getValue0();
+            long hash = entry.getValue1();
+            Branch local = tree.findById(id);
+
+            if (local == null)
+                sink.accept(new GetBranchRequest(id));
+            else if (hash != local.hash())
+                sink.accept(new CompareBranchRequest(id, local.hash(), false));
+        }
+    }
+
+    public static ChildrenResponse fromBranch(Branch branch) {
+        List<Pair<Long, Long>> pairs = branch.children().stream()
+                .map(b -> new Pair<>(b.identifier(), b.hash()))
+                .collect(Collectors.toList());
+        return new ChildrenResponse(pairs);
     }
 }

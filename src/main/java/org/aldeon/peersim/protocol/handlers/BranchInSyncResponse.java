@@ -1,15 +1,11 @@
 package org.aldeon.peersim.protocol.handlers;
 
-import org.aldeon.peersim.protocol.AldeonProtocol;
-import org.aldeon.peersim.protocol.models.DbStub;
-import peersim.core.Protocol;
+import org.aldeon.peersim.protocol.model.Tree;
 
-import java.util.ArrayList;
+import java.util.function.Consumer;
 
-/**
- * Created by mb on 22.06.15.
- */
-public class BranchInSyncResponse extends AldeonMessage {
+
+public class BranchInSyncResponse extends Response {
 
     @Override
     public String toString() {
@@ -17,8 +13,7 @@ public class BranchInSyncResponse extends AldeonMessage {
     }
 
     @Override
-    public ArrayList<AldeonMessage> handle(DbStub dbStub, Protocol protocol) {
-        AldeonProtocol aldeonProtocol = (AldeonProtocol) protocol;
-        return null;
+    protected void handle(Tree tree, Consumer<Request> sink) {
+
     }
 }
