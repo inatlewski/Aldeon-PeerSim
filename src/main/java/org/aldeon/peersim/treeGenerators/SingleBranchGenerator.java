@@ -1,4 +1,4 @@
-package org.aldeon.peersim.treeGenerators;
+package main.java.org.aldeon.peersim.treeGenerators;
 
 import com.opencsv.CSVWriter;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SingleBranchGenerator extends BaseTreeGenerator {
 
-    public static void main(String [ ] args) throws IOException {
+    public static void main(String [] args) throws IOException {
 
         totalNumberOfPosts = 1000000;
         outputFile = "config/singleBranch1M.csv";
