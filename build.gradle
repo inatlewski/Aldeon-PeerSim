@@ -17,11 +17,5 @@ dependencies {
 task(simulate, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'peersim.Simulator'
-    args = ["config/singleBranch.config"]
-}
-
-task(simulate2, dependsOn: 'classes', type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'peersim.Simulator'
     args = ["config/simple.properties"]
 }

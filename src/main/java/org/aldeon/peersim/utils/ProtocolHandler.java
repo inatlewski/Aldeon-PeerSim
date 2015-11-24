@@ -26,7 +26,7 @@ public abstract class ProtocolHandler {
         Packet packet = new Packet();
         packet.from = nid;
         packet.payload = message;
-        Transports.send(node().getIndex(), target, pid, packet);
+        Utils.send(node().getIndex(), target, pid, packet);
     }
 
     protected abstract void handle(int from, Object message);
