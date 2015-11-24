@@ -6,11 +6,39 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+
+    compile 'org.slf4j:slf4j-log4j12:1.7.5'
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.javatuples:javatuples:1.2'
     compile fileTree(dir: 'lib', include: ['*.jar'])
 }
 
 task(simulate, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'peersim.Simulator'
-    args = ["config/singleBranch.config"]
+    main = 'org.aldeon.Simulator'
+    args = ["config/simple.properties"]
+}
+
+task(rmcfg, type: Delete) {
+    delete fileTree('config/') {
+        include '*.cfg'
+    }
+}
+
+task(confgen, dependsOn: ['classes', 'rmcfg'], type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.aldeon.confgen.Main'
+}
+
+task runAll(dependsOn: ['classes', 'confgen']) {
+    fileTree(dir: 'config/', include:'*.cfg').each { file ->
+        doLast {
+            javaexec {
+                classpath = sourceSets.main.runtimeClasspath
+                main = 'org.aldeon.Simulator'
+                args = ["config/$file.name"]
+            }
+        }
+    }
 }
