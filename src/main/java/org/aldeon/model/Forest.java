@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Interface for mutable collections of parent-child relations.
@@ -42,6 +44,10 @@ public interface Forest extends Iterable<Long> {
     default Branch view(long id) {
         if (!contains(id)) return null;
         return new LambdaBranch(id, () -> hash(id), () -> withParent(id).stream().map(this::view).collect(Collectors.toSet()));
+    }
+
+    default Stream<Long> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 
 }

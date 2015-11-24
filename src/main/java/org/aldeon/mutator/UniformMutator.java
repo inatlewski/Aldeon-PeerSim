@@ -6,7 +6,7 @@ import org.aldeon.model.Forest;
 import java.util.List;
 import java.util.Random;
 
-public class UniformProbabilityMutator implements Mutator {
+public class UniformMutator implements Mutator {
 
     @Override
     public void mutate(Forest forest, int diffs) {
