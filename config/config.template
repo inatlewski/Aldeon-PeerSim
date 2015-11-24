@@ -1,12 +1,12 @@
 # Main configuration
-simulation.endtime = 65536
+simulation.endtime = 1048576
 random.seed = 42
 network.size = 2
 
 # Protocol class
 protocol.aldeon = org.aldeon.peersim.AldeonEDProtocol
 protocol.aldeon.transport = transport
-protocol.aldeon.suggests = true
+protocol.aldeon.suggests = %SUGGESTS%
 
 # Transport config
 protocol.transport = UniformRandomTransport
@@ -17,9 +17,9 @@ protocol.transport.maxdelay = 5
 control.init = org.aldeon.peersim.SimulationInitializer
 control.init.step = 1
 control.init.protocol = aldeon
-control.init.csv = instances/single/10k.csv
-control.init.diff = org.aldeon.mutator.UniformMutator
-control.init.diff_count = 2
+control.init.csv = %INPUT_FILE%
+control.init.diff = %MUTATOR%
+control.init.diff_count = %DIFF_COUNT%
 
 # simulation termination checker
 control.fin = org.aldeon.peersim.SyncFinishedChecker

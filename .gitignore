@@ -110,3 +110,5 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 other/
+config/*.cfg
+result.txt

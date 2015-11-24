@@ -2,6 +2,8 @@ package org.aldeon.peersim.handlers;
 
 import org.aldeon.model.Branch;
 import org.aldeon.model.Forest;
+import peersim.config.Configuration;
+
 import java.util.Set;
 
 
@@ -11,6 +13,8 @@ public class CompareBranchRequest extends Request {
     private long hash;
     private boolean allowSuggest;
 
+    private static final boolean globalAllow = Configuration.getBoolean("protocol.aldeon.suggests");
+
     /**
      * @param branch - branch root identifier
      * @param hash - value of branch hash function of the other node
@@ -19,7 +23,7 @@ public class CompareBranchRequest extends Request {
     public CompareBranchRequest(long branch, long hash, boolean allow) {
         this.branch = branch;
         this.hash = hash;
-        this.allowSuggest = allow;
+        this.allowSuggest = allow && globalAllow;
     }
 
     @Override

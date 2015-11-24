@@ -24,7 +24,7 @@ public class AldeonProtocolHandler extends ProtocolHandler {
         } else if (event == INIT_SIM) {
             startSync();
         } else {
-            log.debug("Received unknown message!");
+            //log.debug("Received unknown message!");
         }
     }
 
@@ -36,7 +36,7 @@ public class AldeonProtocolHandler extends ProtocolHandler {
 
     private void handleMessage(int from, Message message) {
         msgCount += 1;
-        log.info("Node {} received message {}", 1 - from, message.getClass().getName());
+        //log.info("Node {} received message {}", 1 - from, message.getClass().getName());
         message.handle(forest).forEach(response -> send(from, response));
     }
 

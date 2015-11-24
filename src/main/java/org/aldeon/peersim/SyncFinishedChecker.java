@@ -1,6 +1,7 @@
 package org.aldeon.peersim;
 
 
+import org.aldeon.Simulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peersim.config.Configuration;
@@ -40,6 +41,7 @@ public class SyncFinishedChecker implements Control {
         if (inactive > 10) {
             log.info("No messages sent for 10 turns, simulation concluded.");
             log.info("Messages sent in total: {}", sum);
+            Simulator.result = sum;
             return true;
         }
 

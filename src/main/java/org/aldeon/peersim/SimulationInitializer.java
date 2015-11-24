@@ -21,9 +21,9 @@ public class SimulationInitializer extends OneTimeControl {
     public SimulationInitializer(String name) {
         this.name = name;
         pid = Configuration.getPid(name + ".protocol");
-        log.debug("Starting with parameter \"{}\"", name);
-        log.debug("Protocol PID: {}", pid);
-        log.debug("Protocol has transport? {}", FastConfig.hasTransport(pid));
+        //log.debug("Starting with parameter \"{}\"", name);
+        //log.debug("Protocol PID: {}", pid);
+        //log.debug("Protocol has transport? {}", FastConfig.hasTransport(pid));
     }
 
     @Override
@@ -36,7 +36,6 @@ public class SimulationInitializer extends OneTimeControl {
 
         // Put the tree copy in each node
         Utils.forEachHandler(pid, (i, handler) -> {
-            log.debug("Putting the tree in node {}", i);
             handler.getForest().addAll(forest);
         });
 

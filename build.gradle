@@ -16,6 +16,29 @@ dependencies {
 
 task(simulate, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'peersim.Simulator'
+    main = 'org.aldeon.Simulator'
     args = ["config/simple.properties"]
+}
+
+task(rmcfg, type: Delete) {
+    delete fileTree('config/') {
+        include '*.cfg'
+    }
+}
+
+task(confgen, dependsOn: ['classes', 'rmcfg'], type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.aldeon.confgen.Main'
+}
+
+task runAll(dependsOn: ['classes', 'confgen']) {
+    fileTree(dir: 'config/', include:'*.cfg').each { file ->
+        doLast {
+            javaexec {
+                classpath = sourceSets.main.runtimeClasspath
+                main = 'org.aldeon.Simulator'
+                args = ["config/$file.name"]
+            }
+        }
+    }
 }
