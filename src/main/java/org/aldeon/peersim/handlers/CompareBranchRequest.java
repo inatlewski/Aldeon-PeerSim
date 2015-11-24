@@ -14,12 +14,12 @@ public class CompareBranchRequest extends Request {
     /**
      * @param branch - branch root identifier
      * @param hash - value of branch hash function of the other node
-     * @param force - allowSuggest, if set to true, the suggest option is disabled
+     * @param allow - if set to true, the suggest is enabled
      */
-    public CompareBranchRequest(long branch, long hash, boolean force) {
+    public CompareBranchRequest(long branch, long hash, boolean allow) {
         this.branch = branch;
         this.hash = hash;
-        this.allowSuggest = force;
+        this.allowSuggest = allow;
     }
 
     @Override
