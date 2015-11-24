@@ -72,6 +72,7 @@ public class HashForest implements Forest {
 
     @Override
     public Set<Long> withHash(long hash) {
+        recompute(Branch.ZERO);
         return hashes.find(hash);
     }
 
@@ -95,6 +96,7 @@ public class HashForest implements Forest {
         }
         for(int i = list.size() - 1; i >= 0; --i) {
             long current = list.get(i);
+            if (current == Branch.ZERO) continue;;
             long sum = current;
             for (long child: children.get(current)) {
                 sum = sum ^ hashes.get(child);

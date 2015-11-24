@@ -61,4 +61,17 @@ public class HashForestTest {
         assertEquals(6, f.hash(5));
     }
 
+    @Test
+    public void tstHashBasedLookup() {
+        Forest f = new HashForest();
+
+        f.add(0, 32);
+        f.add(32, 16);
+        f.add(16, 8);
+        f.add(16, 4);
+
+        assertTrue(f.withHash(8).contains(8L));
+        assertTrue(f.withHash(28).contains(16L));
+    }
+
 }
