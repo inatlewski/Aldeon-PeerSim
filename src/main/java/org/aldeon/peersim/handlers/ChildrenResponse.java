@@ -33,7 +33,7 @@ public class ChildrenResponse extends Response {
 
             if (forest.contains(id)) {
                 long localHash = forest.hash(id);
-                if (hash != localHash) sink.accept(new CompareBranchRequest(id, localHash, false));
+                if (hash != localHash) sink.accept(new CompareBranchRequest(id, localHash, true));
             } else {
                 sink.accept(new GetBranchRequest(id));
             }
