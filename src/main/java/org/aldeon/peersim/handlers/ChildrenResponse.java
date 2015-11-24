@@ -1,8 +1,9 @@
 package org.aldeon.peersim.handlers;
 
 import org.aldeon.model.Branch;
-import org.aldeon.model.Tree;
+import org.aldeon.model.Forest;
 import org.javatuples.Pair;
+
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -22,19 +23,20 @@ public class ChildrenResponse extends Response {
     }
 
     @Override
-    protected void handle(Tree tree, Consumer<Request> sink) {
+    protected void handle(Forest forest, Consumer<Request> sink) {
 
         //iterate over all children
         for (Pair<Long, Long> entry: children) {
 
             long id = entry.getValue0();
             long hash = entry.getValue1();
-            Branch local = tree.findById(id);
 
-            if (local == null)
+            if (forest.contains(id)) {
+                long localHash = forest.hash(id);
+                if (hash != localHash) sink.accept(new CompareBranchRequest(id, localHash, false));
+            } else {
                 sink.accept(new GetBranchRequest(id));
-            else if (hash != local.hash())
-                sink.accept(new CompareBranchRequest(id, local.hash(), false));
+            }
         }
     }
 

@@ -19,7 +19,7 @@ public class BalancedTreeGenerator extends BaseTreeGenerator {
         //add root node
         posts.add(new String[] {"1", "0"});
 
-        //generate a balanced tree
+        //generate a balanced forest
         for (long i = 2; i <= totalNumberOfPosts; i++) {
             posts.add(new String[] {String.valueOf(i), String.valueOf(i/2)});
         }

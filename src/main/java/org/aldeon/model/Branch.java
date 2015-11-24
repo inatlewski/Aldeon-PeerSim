@@ -1,6 +1,6 @@
 package org.aldeon.model;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Branch interface. Provides basic information: identifier and children.
@@ -11,13 +11,16 @@ public interface Branch {
     long ZERO = 0L;
 
     long identifier();
-    long parent();
-    List<Branch> children();
+    Set<Branch> children();
 
     default long hash() {
         long xor = identifier();
         for (Branch branch: children()) xor = xor ^ branch.hash();
         return xor;
+    }
+
+    default boolean isRoot() {
+        return identifier() == ZERO;
     }
 
 }

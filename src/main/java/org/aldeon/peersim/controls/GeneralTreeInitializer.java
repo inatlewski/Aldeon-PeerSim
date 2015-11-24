@@ -1,8 +1,8 @@
 package org.aldeon.peersim.controls;
 
-import org.aldeon.peersim.AldeonProtocol;
 import org.aldeon.helpers.CsvTreeReader;
-import org.aldeon.model.Tree;
+import org.aldeon.model.Forest;
+import org.aldeon.peersim.AldeonProtocol;
 import peersim.config.Configuration;
 import peersim.core.Control;
 import peersim.core.Network;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class GeneralTreeInitializer extends BaseTreeInitializer implements Control {
 
     private static final String PAR_SOURCE_PATH = "source";
-    private static final String PAR_NUM_NEW = "numNewMessages"; //number of messages that should be added to the tree
+    private static final String PAR_NUM_NEW = "numNewMessages"; //number of messages that should be added to the forest
     private static final String PAR_DIFFGEN = "diffGeneration";
 
     private static final String DIFFGEN_RANDOM_LEAF = "randomLeaf"; //new leaf in a random place
@@ -21,34 +21,28 @@ public class GeneralTreeInitializer extends BaseTreeInitializer implements Contr
     private static final String DIFFGEN_RANDOM_SUBTREE = "randomSubtree";
     private static final String DIFFGEN_PROB = "probabilistic"; //probability of adding a leaf is proportional to the number of children
 
-    private String diffGeneration;
-    private String sourcePath;
-    private Integer numNewMessages;
+    private final String diffGeneration;
+    private final String sourcePath;
 
     public GeneralTreeInitializer(String prefix) {
         this.diffGeneration = Configuration.getString(prefix + "." + PAR_DIFFGEN);
-        this.numNewMessages = Integer.parseInt(Configuration.getString(prefix + "." + PAR_NUM_NEW));
         this.sourcePath = Configuration.getString(prefix + "." + PAR_SOURCE_PATH);
         this.pid = Configuration.getPid(prefix + "." + PAR_PROT);
-
-        System.out.println("num new messages " + numNewMessages);
     }
 
     public boolean execute() {
-        //load tree from csv
+        //load forest from csv
         CsvTreeReader csvTreeReader = new CsvTreeReader(sourcePath);
 
         try {
-            Tree loadedPosts = csvTreeReader.GetPostsTree();
+            Forest loadedPosts = csvTreeReader.GetPostsTree();
             for(int i = 0; i < Network.size(); ++i) {
                 AldeonProtocol aldeonProtocol = (AldeonProtocol) Network.get(i).getProtocol(this.pid);
-                aldeonProtocol.setTree(loadedPosts.copy());
+                aldeonProtocol.forest.addAll(loadedPosts);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
 
         //TODO generate differences
         switch (this.diffGeneration) {

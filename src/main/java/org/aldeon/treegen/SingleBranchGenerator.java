@@ -16,7 +16,7 @@ public class SingleBranchGenerator extends BaseTreeGenerator {
 
         CSVWriter writer = new CSVWriter(new FileWriter(outputFile));
 
-        //generate a tree where every post responds to previous one
+        //generate a forest where every post responds to previous one
         List<String[]> posts = new ArrayList<>();
 
         for (long i = 1; i <= totalNumberOfPosts; i++) {

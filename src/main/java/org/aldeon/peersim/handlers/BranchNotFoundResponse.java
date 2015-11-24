@@ -1,6 +1,6 @@
 package org.aldeon.peersim.handlers;
 
-import org.aldeon.model.Tree;
+import org.aldeon.model.Forest;
 
 import java.util.function.Consumer;
 
@@ -12,7 +12,7 @@ public class BranchNotFoundResponse extends Response {
     }
 
     @Override
-    protected void handle(Tree tree, Consumer<Request> sink) {
+    protected void handle(Forest forest, Consumer<Request> sink) {
 
     }
 }

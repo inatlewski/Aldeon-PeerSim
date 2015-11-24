@@ -1,6 +1,6 @@
 package org.aldeon.peersim.handlers;
 
-import org.aldeon.model.Tree;
+import org.aldeon.model.Forest;
 
 public class GetBranchRequest extends Request {
 
@@ -19,9 +19,9 @@ public class GetBranchRequest extends Request {
     }
 
     @Override
-    public Response handler(Tree tree) {
-        return tree.contains(id)
-                ? new BranchFoundResponse(tree.findById(id))
+    public Response handler(Forest forest) {
+        return forest.contains(id)
+                ? new BranchFoundResponse(forest.parent(id), forest.view(id))
                 : new BranchNotFoundResponse();
     }
 }

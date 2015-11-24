@@ -4,7 +4,10 @@ import com.opencsv.CSVWriter;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by mb on 18.11.15.
@@ -39,7 +42,7 @@ public class FurryListGenerator extends BaseTreeGenerator {
 
         List<String[]> posts = new ArrayList<>();
 
-        //generate a tree where every post responds to previous one
+        //generate a forest where every post responds to previous one
         for (long i = 1; i <= numOnList; i++) {
             posts.add(new String[] {String.valueOf(i), String.valueOf(i - 1)});
         }

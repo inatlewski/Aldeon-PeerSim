@@ -1,6 +1,6 @@
 package org.aldeon.peersim.handlers;
 
-import org.aldeon.model.Tree;
+import org.aldeon.model.Forest;
 
 import java.util.function.Consumer;
 
@@ -23,12 +23,12 @@ public class SuggestResponse extends Response {
     }
 
     @Override
-    protected void handle(Tree tree, Consumer<Request> sink) {
-        if (tree.contains(parent) && ! tree.contains(id)) {
+    protected void handle(Forest forest, Consumer<Request> sink) {
+        if (forest.contains(parent) && ! forest.contains(id)) {
             sink.accept(new GetBranchRequest(id));
             // then we should ask the original branch again, but we can skip it for now.
         } else {
-            sink.accept(new CompareBranchRequest(originalBranch, tree.findById(originalBranch).hash(), false));
+            sink.accept(new CompareBranchRequest(originalBranch, forest.hash(originalBranch), false));
         }
     }
 }

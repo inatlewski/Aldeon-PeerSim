@@ -1,12 +1,11 @@
 package org.aldeon.helpers;
 
 import com.opencsv.CSVReader;
-import org.aldeon.model.Tree;
-import org.javatuples.Pair;
+import org.aldeon.model.Forest;
+import org.aldeon.model.HashForest;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 public class CsvTreeReader {
 
@@ -16,13 +15,16 @@ public class CsvTreeReader {
         this.sourceFile = sourcePath;
     }
 
-    public Tree GetPostsTree() throws IOException {
+    public Forest GetPostsTree() throws IOException {
 
         try (CSVReader csvReader = new CSVReader(new FileReader(sourceFile))) {
-            return Tree.build(csvReader.readAll().stream()
-                    .map(row -> new Pair<>(Long.parseLong(row[1]), Long.parseLong(row[0])))
-                    .collect(Collectors.toList())
-            );
+            Forest forest = new HashForest();
+            csvReader.readAll().forEach(row -> {
+                long child = Long.parseLong(row[0]);
+                long parent = Long.parseLong(row[1]);
+                forest.add(parent, child);
+            });
+            return forest;
         }
     }
 }

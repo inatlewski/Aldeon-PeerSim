@@ -1,13 +1,15 @@
 package org.aldeon.peersim;
 
+import org.aldeon.model.Forest;
+import org.aldeon.model.HashForest;
 import org.aldeon.peersim.handlers.CompareBranchRequest;
 import org.aldeon.peersim.handlers.Message;
-import org.aldeon.model.Tree;
 import peersim.cdsim.CDProtocol;
 import peersim.config.FastConfig;
 import peersim.core.Linkable;
 import peersim.core.Node;
 import peersim.vector.SingleValueHolder;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -15,7 +17,7 @@ import java.util.Queue;
 public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
 
     public static final long ROOT = 42;
-    public Tree tree = new Tree(ROOT);
+    public Forest forest = new HashForest();
     private boolean initialized = false;
     private final Queue<Message> inbox = new LinkedList<>();
     private long messagesSent = 0;
@@ -23,10 +25,6 @@ public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
 
     public AldeonProtocol(String prefix) {
         super(prefix);
-    }
-
-    public void setTree(Tree tree) {
-        this.tree = tree;
     }
 
     public long getMessagesSent() {
@@ -46,13 +44,13 @@ public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
         if (!peer.isUp()) throw new IllegalStateException("peer is down");
 
         AldeonProtocol peerAldeonProtocol = (AldeonProtocol) peer.getProtocol(protocolID);
-        System.out.println("I am node " + node.getIndex()  + " num messages " + tree.size());
+        System.out.println("I am node " + node.getIndex()  + " num messages " + forest.size());
 
         if (!initialized) {
             initialized = true;
             if (node.getIndex() == 0) {
                 //send sync request to the other party
-                long rootHash = tree.findById(ROOT).hash();
+                long rootHash = forest.hash(ROOT);
                 System.out.println("XOR for root message = " + rootHash);
                 peerAldeonProtocol.inbox.add(new CompareBranchRequest(ROOT, rootHash, false));
                 ++messagesSent;
@@ -67,7 +65,7 @@ public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
             System.out.println("receiving message " + msg + " on node " + node.getIndex());
             ++messagesReceived;
 
-            for (Message response : msg.handle(tree)) {
+            for (Message response : msg.handle(forest)) {
                 peerAldeonProtocol.inbox.add(response);
                 System.out.println("sending message " + response);
                 ++messagesSent;
@@ -76,9 +74,10 @@ public class AldeonProtocol extends SingleValueHolder implements CDProtocol {
     }
 
     @Override
-    public Object clone() { //since nodes are created by cloning, it is necessary to deep clone database stub
+    public Object clone() {
         AldeonProtocol aldeonProtocol = (AldeonProtocol) super.clone();
-        aldeonProtocol.tree = tree.copy();
+        aldeonProtocol.forest = new HashForest();
+        aldeonProtocol.forest.addAll(forest);
         return aldeonProtocol;
     }
 }

@@ -1,9 +1,8 @@
 package org.aldeon.peersim.handlers;
 
 import org.aldeon.model.Branch;
-import org.aldeon.model.Tree;
-
-import java.util.List;
+import org.aldeon.model.Forest;
+import java.util.Set;
 
 
 public class CompareBranchRequest extends Request {
@@ -29,26 +28,26 @@ public class CompareBranchRequest extends Request {
     }
 
     @Override
-    public Response handler(Tree tree) {
+    public Response handler(Forest forest) {
 
         // check if branch is known
-        if (! tree.contains(branch)) return new BranchNotFoundResponse();
+        if (! forest.contains(branch)) return new BranchNotFoundResponse();
 
-        long diff = tree.findById(branch).hash() ^ hash;
+        long diff = forest.hash(branch) ^ hash;
 
         // if so, check if hashes differ
         if (diff == Branch.ZERO) return new BranchInSyncResponse();
 
         // so hashes differ - try the suggest
         if (allowSuggest) {
-            List<Branch> suggests = tree.findByHash(diff);
+            Set<Long> suggests = forest.withHash(diff);
             if (suggests.size() > 0) {
-                Branch pick = suggests.get(0);
-                return new SuggestResponse(pick.identifier(), pick.parent(), branch);
+                Long pick = suggests.iterator().next();
+                return new SuggestResponse(pick, forest.parent(pick), branch);
             }
         }
 
-        return ChildrenResponse.fromBranch(tree.findById(branch));
+        return ChildrenResponse.fromBranch(forest.view(branch));
 
     }
 }
