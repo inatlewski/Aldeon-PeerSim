@@ -15,15 +15,17 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final Map<String, String> MUTATORS = ImmutableMap.of(
-            "uniform", "org.aldeon.mutator.UniformMutator",
-            "leaf", "org.aldeon.mutator.UniformLeafMutator"
+//            "uniform", "org.aldeon.mutator.UniformMutator",
+//            "leaf", "org.aldeon.mutator.UniformLeafMutator"
+            "leafIterating", "org.aldeon.mutator.LeafIteratingMutator"
+
     );
 
     private static final Set<String> TREES = ImmutableSet.of(
-            "balanced",
-            "furry",
-            "single",
-            "wide"
+//            "balanced",
+//            "furry",
+            "single"
+//            "wide"
     );
 
     private static final Map<Integer, String> SIZES = ImmutableMap.of(
@@ -38,7 +40,8 @@ public class Main {
         for (String tree: TREES) {
             for (Map.Entry<String, String> mutator: MUTATORS.entrySet()) {
                 for (Map.Entry<Integer, String> size: SIZES.entrySet()) {
-                    for (boolean suggests: Lists.newArrayList(true, false)) {
+//                    for (boolean suggests: Lists.newArrayList(true, false)) {
+                        boolean suggests = true;
                         int currentSize = 1;
 
                         while (currentSize < size.getKey()) {
@@ -57,7 +60,7 @@ public class Main {
                             Files.write(Paths.get("config/" + cfgName), Lists.newArrayList(newTemplate), Charsets.UTF_8);
 
                             currentSize *= 2;
-                        }
+//                        }
                     }
                 }
             }
